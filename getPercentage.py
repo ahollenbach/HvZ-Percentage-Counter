@@ -25,5 +25,7 @@ while not done:
     if cur == "</html>":
         done = True
 
-print "Humans:",humans
-print "Zombies:",zombies
+total = float(humans + zombies)
+
+print "Humans:",humans,"(",'%.2f' % (100*(humans/total)),"%)"
+print "Zombies:",zombies,"(",'%.2f' % (100*(zombies/total)),"%)"
