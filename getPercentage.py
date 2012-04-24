@@ -1,31 +1,38 @@
-import urllib2,sys
+import urllib2,sys,time
+from datetime import datetime
 
-#line containing player name. next line contains whether human or zombie.
-catchLine = '<td><a href="/users/profile.php?uid'
-address = "https://hvz.rit.edu/game/players/"
+def getNums():
+        address = "https://hvz.rit.edu/game/players/"
+        html = urllib2.urlopen(address)
+        #line before zombie/human stats
+        catchLine = 'Current Game Statistics'
+        count = 0
+        done = False
+        while not done:
+            cur = html.readline()
+            if count>0:
+                cur = cur.split()
+                curS = cur[3]
+                if count==1:
+                        zP = curS[3:8]
+                        count+=1
+                else:
+                        hP = curS[3:8]
+                        count=0
+            if cur[:4] == '<h3>':
+                count=1
+            if cur == "</html>":
+                done = True
 
-html = urllib2.urlopen(address)
+        with open("percents.txt", "a") as myFile:
+            s = str(datetime.now())+","+str(hP)+","+str(zP)
+            myFile.write(s+'\n')
+        print(s)
+        myFile.close()
+        html.close()
+def main():
+        while True:
+                getNums()
+                time.sleep(3600)
 
-toggle = False
-humans = 0
-zombies = 0
-done = False
-
-while not done:
-    cur = html.readline()
-    if toggle:
-        if cur[4:10] == "Humans":
-            humans += 1
-        elif cur[4:11] == "Zombies":
-            zombies += 1
-        #else, do nothing (mod or admin)
-    if catchLine == cur[:35]:
-        toggle = True
-
-    if cur == "</html>":
-        done = True
-
-total = float(humans + zombies)
-
-print "Humans:",humans,"(",'%.2f' % (100*(humans/total)),"%)"
-print "Zombies:",zombies,"(",'%.2f' % (100*(zombies/total)),"%)"
+main()
