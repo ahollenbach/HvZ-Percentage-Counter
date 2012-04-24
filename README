@@ -1,0 +1,8 @@
+## Andrew Hollenbach <anh7216@rit.edu>
+## HvZ Percentage Counter
+
+The HvZ Percentage Counter is a very simple web scraper that checks the 
+hvz.rit.edu webpage for the human and zombie percentages. 
+The program is setup to run every 3600 seconds (1 hour).
+
+Python 2.x is required (uses urllib2).
